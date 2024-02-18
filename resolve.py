@@ -1,19 +1,7 @@
-N = int(input())
-tops = list(map(int, input().split()))
-ans = []
-stk = []
+A, B, C = map(int, input().split())
 
-for i in range(N):
-  while stk:
-    if stk[-1][1] >= tops[i]:
-      ans.append(stk[-1][0] + 1)
-      break
-    else:
-      stk.pop()
 
-  if not stk:
-    ans.append(0)
-  
-  stk.append([i, tops[i]])
-
-print(*ans)
+print((A + B) % C)
+print(((A % C) + (B % C)) % C)
+print((A * B) % C)
+print(((A % C) * (B % C)) % C)
