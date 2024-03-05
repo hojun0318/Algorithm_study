@@ -14,10 +14,10 @@ def bfs(x, y, h):
 
   while queue:
     x, y, h = queue.popleft()
-    
+
     if x == (N - 1) and y == (M - 1):
       return visited[x][y][h]
-
+    
     for i in range(4):
       nx = x + dx[i]
       ny = y + dy[i]
@@ -26,7 +26,7 @@ def bfs(x, y, h):
         if walls[nx][ny] == 0 and visited[nx][ny][h] == 0:
           visited[nx][ny][h] = visited[x][y][h] + 1
           queue.append((nx, ny, h))
-        if walls[nx][ny] == 1 and h == 1:
+        if walls[nx][ny] == 1 and h == 1 and visited[nx][ny][h - 1] == 0:
           visited[nx][ny][h - 1] = visited[x][y][h] + 1
           queue.append((nx, ny, h - 1))
 
