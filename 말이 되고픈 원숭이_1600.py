@@ -22,6 +22,7 @@ def bfs(x, y, k):
 
   while queue:
     x, y, k = queue.popleft()
+    
     if x == (H - 1) and y == (W - 1):
       return visited[x][y][k]
     
