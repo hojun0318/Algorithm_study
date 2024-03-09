@@ -1,46 +1,50 @@
+import sys
 from collections import deque
+input = sys.stdin.readline
 
-N, M, K = map(int, input().split())
-matrix = [list(map(int, input())) for _ in range(N)]
-visited = [[[0] * (K + 1) for _ in range(M)] for _ in range(N)]
-visited[0][0][0] = 1
-
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
-
-def bfs(x, y, k):
-  queue = deque()
-  queue.append((x, y, k))
-  day = True
-
-  while queue:
-    x, y, k = queue.popleft()
-
-    if x == (N - 1) and y == (M - 1):
-      return visited[x][y][k]
-
-    for i in range(4):
-      nx = x + dx[i]
-      ny = y + dy[i]
-
-      if 0 <= nx < N and 0 <= ny < M and visited[nx][ny][k] == 0:
-        if matrix[nx][ny] == 0:
-          queue.append((nx, ny, k))
-          visited[nx][ny][k] = visited[x][y][k] + 1
-
-        elif k < K:
-          if not day:
-            queue.append((x, y, k))
-          else:
-            queue.append((nx, ny, k + 1))
-            visited[nx][ny][k + 1] = visited[x][y][k] + 1
-  
-    day = not day
-
-  return -1
+n,m,p = map(int,input().split())
+castle = [deque() for _ in range(p+1)]
+power = [0]+list(map(int,input().split()))
+graph = [list(input().rstrip()) for _ in range(n)]
+cnt = [0]*(p+1)
 
 
-print(bfs(0, 0, 0))
+for i in range(n):
+    for j in range(m):
+        if graph[i][j] != '.' and graph[i][j] != '#':
+            cnt[int(graph[i][j])] += 1
+            castle[int(graph[i][j])].append((i,j))
 
-for i in visited:
-  print(i)
+
+
+moves = [(0,1),(1,0),(0,-1),(-1,0)]
+def bfs():
+    is_moved = True
+    while is_moved:
+        is_moved = False
+
+        for i in range(1,p+1):
+            if not castle[i]: # 비어있다면 continue
+                continue
+
+            q = castle[i]
+
+            for _ in range(power[i]):
+                if not q: # power 연산 중에 비어졌다면 break
+                    break
+
+                for _ in range(len(q)):
+                    x,y = q.popleft()
+                    for movex,movey in moves:
+                        nx = x + movex
+                        ny = y + movey
+                        
+                        if 0 <= nx < n and 0 <= ny < m and graph[nx][ny] == '.':
+                            graph[nx][ny] = str(i)
+                            q.append((nx,ny))
+                            cnt[i] += 1
+                            is_moved = True
+
+        
+bfs()
+print(*cnt[1:])
