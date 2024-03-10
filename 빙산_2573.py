@@ -16,6 +16,8 @@ for i in range(N):
 cnt = 0
 flag = True
 
+print(queue)
+
 while queue:
   next = []
   melts = []

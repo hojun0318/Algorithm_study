@@ -1,50 +1,55 @@
-import sys
 from collections import deque
-input = sys.stdin.readline
 
-n,m,p = map(int,input().split())
-castle = [deque() for _ in range(p+1)]
-power = [0]+list(map(int,input().split()))
-graph = [list(input().rstrip()) for _ in range(n)]
-cnt = [0]*(p+1)
+N, M = map(int, input().split())
 
+rooms = [[0] * N for _ in range(N)]
+rooms[0][0] = 1
 
-for i in range(n):
-    for j in range(m):
-        if graph[i][j] != '.' and graph[i][j] != '#':
-            cnt[int(graph[i][j])] += 1
-            castle[int(graph[i][j])].append((i,j))
+visited = [[0] * N for _ in range(N)]
+visited[0][0] = 1
 
+switch = []
 
+ans = 0
 
-moves = [(0,1),(1,0),(0,-1),(-1,0)]
-def bfs():
-    is_moved = True
-    while is_moved:
-        is_moved = False
+for _ in range(M):
+  x, y, a, b = map(int, input().split())
+  switch.append([x, y, a, b])
 
-        for i in range(1,p+1):
-            if not castle[i]: # 비어있다면 continue
-                continue
+queue = deque()
+queue.append((0, 0))
 
-            q = castle[i]
+da = [-1, 1, 0, 0]
+db = [0, 0, -1, 1]
 
-            for _ in range(power[i]):
-                if not q: # power 연산 중에 비어졌다면 break
-                    break
+while queue:
+  tmp = []
+  r, c = queue.popleft()
 
-                for _ in range(len(q)):
-                    x,y = q.popleft()
-                    for movex,movey in moves:
-                        nx = x + movex
-                        ny = y + movey
-                        
-                        if 0 <= nx < n and 0 <= ny < m and graph[nx][ny] == '.':
-                            graph[nx][ny] = str(i)
-                            q.append((nx,ny))
-                            cnt[i] += 1
-                            is_moved = True
-
+  for x, y, a, b in switch:
+    if r == x - 1 and c == y - 1:
+      rooms[a - 1][b - 1] = 1
         
-bfs()
-print(*cnt[1:])
+      for i in range(4):
+        na = (a - 1) + da[i]
+        nb = (b - 1) + db[i]
+
+        if 0 <= na < N and 0 <= nb < N:
+          if visited[na][nb] == 1:
+            queue.appendleft((a - 1, b - 1))
+            visited[a - 1][b - 1] = 1
+
+          if visited[na][b] == 0 and rooms[na][nb] == 1:
+            tmp.append((na, nb))
+
+  queue = tmp[:]
+
+
+
+
+for room in rooms:
+  for right in room:
+    if right == 1:
+      ans += 1
+
+print(ans)
