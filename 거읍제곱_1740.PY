@@ -7,5 +7,4 @@ for i in obN:
   ans += int(i) * t
   t *= 3
 
-print(obN)
 print(ans)
