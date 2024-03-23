@@ -1,30 +1,54 @@
-import sys
-sys.setrecursionlimit(111111) #충분한 재귀 깊이를 주어 오류를 예방
+from collections import deque
 
+def bfs(x, y):
+    queue = deque()
+    queue.append((x, y))
 
-def dfs(x):
-    global result
-    visited[x] = True
-    cycle.append(x) #사이클을 이루는 팀을 확인하기 위함
-    number = numbers[x]
-    
-    if visited[number]: #방문가능한 곳이 끝났는지
-        if number in cycle: #사이클 가능 여부
-            result += cycle[cycle.index(number):] #사이클 되는 구간 부터만 팀을 이룸
+    visited_bfs = [[0] * 5 for _ in range(5)]
+    visited_bfs[x][y] = 1
+    cnt = 1
+
+    while queue:
+        x, y = queue.popleft()
+
+        for i, j in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            nx = x + i
+            ny = y + j
+
+            if 0 <= nx < 5 and 0 <= ny < 5 and visited_bfs[nx][ny] == 0 and visited_7[nx][ny] == 1:
+                queue.append((nx, ny))
+                visited_bfs[nx][ny] = 1
+                cnt += 1
+        
+    return cnt == 7
+
+def check():
+    for i in range(5):
+        for j in range(5):
+            if visited_7[i][j] == 1:
+                return bfs(i, j)
+
+def dfs(n, cnt, s_cnt):
+    global ans
+    if cnt > 7:
         return
-    else:
-        dfs(number)
-
-
-for _ in range(int(input())):
-    N = int(input())
-    numbers = [0] + list(map(int, input().split()))
-    visited = [True] + [False] * N #방문 여부
-    result = []
+    if n == 25:
+        if cnt == 7 and s_cnt >= 4:
+            if check():
+                ans += 1
+        return
     
-    for i in range(1, N+1):
-        if not visited[i]: #방문 안한 곳이라면
-            cycle = []
-            dfs(i) #DFS 함수 돌림
-            
-    print(N - len(result)) #팀에 없는 사람 수
+    visited_7[n // 5][n % 5] = 1
+    dfs(n + 1, cnt + 1, s_cnt + int(arr[n // 5][n % 5] == 'S'))
+    visited_7[n // 5][n % 5] = 0
+    dfs(n + 1, cnt, s_cnt)
+
+
+
+arr = [list(map(str, input())) for _ in range(5)]
+visited_7 = [[0] * 5 for _ in range(5)]
+ans = 0
+
+dfs(0, 0, 0)
+
+print(ans)
