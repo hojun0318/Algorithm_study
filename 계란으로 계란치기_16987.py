@@ -28,10 +28,10 @@ def dfs(n, cnt):
     if flag == False:
       dfs(n + 1, cnt)
 
+
+
 N = int(input())
 eggs = [list(map(int, input().split())) for _ in range(N)]
-
-visited = [0] * N
 ans = 0
 
 dfs(0, 0)                         # 계란 index, 깨진 계란의 갯수
