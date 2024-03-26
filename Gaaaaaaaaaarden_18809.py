@@ -59,7 +59,7 @@ def dfs(n, rcnt, gcnt, tlst):
   
   dfs(n + 1, rcnt + 1,  gcnt,      tlst + [-1])      # 빨강 씨앗
   dfs(n + 1, rcnt,      gcnt + 1,  tlst + [1])       # 초록 씨앗
-  dfs(n + 1, rcnt,      gcnt,      tlst + [0])           # 안 뿌리는 경우
+  dfs(n + 1, rcnt,      gcnt,      tlst + [0])       # 안 뿌리는 경우
 
 
 
