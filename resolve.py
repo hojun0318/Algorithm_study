@@ -1,4 +1,4 @@
-left = list(input())
+left = list(map(str, input()))
 right = []
 
 for _ in range(int(input())):
