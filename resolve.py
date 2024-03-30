@@ -1,17 +1,19 @@
-from collections import deque
-
-N, K = map(int, input().split())
-
-queue = deque()
-
-for i in range(1, N + 1):
-  queue.append(i)
-
+N = int(input())
+tops = list(map(int, input().split()))
 ans = []
+stk = []
 
-while queue:
-  for _ in range(K - 1):
-    queue.append(queue.popleft())
-  ans.append(str(queue.popleft()))
+for i in range(N):
+  while stk:
+    if stk[-1][1] >= tops[i]:
+      ans.append(stk[-1][0] + 1)
+      break
+    else:
+      stk.pop()
 
-print("<",", ".join(ans)[:],">", sep='')
+  if not stk:
+    ans.append(0)
+  
+  stk.append([i, tops[i]])
+
+print(*ans)
