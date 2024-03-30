@@ -1,18 +1,17 @@
-left = list(map(str, input()))
-right = []
+from collections import deque
 
-for _ in range(int(input())):
-  cursor = list(input().split())
+N, K = map(int, input().split())
 
-  if cursor[0] == 'L' and left:
-    right.append(left.pop())
-  elif cursor[0] == 'D' and right:
-    left.append(right.pop())
-  elif cursor[0] == 'B' and left:
-    left.pop()
-  elif cursor[0] == 'P':
-    left.append(cursor[1])
+queue = deque()
 
-ans = left + right[::-1]
+for i in range(1, N + 1):
+  queue.append(i)
 
-print(''.join(ans))
+ans = []
+
+while queue:
+  for _ in range(K - 1):
+    queue.append(queue.popleft())
+  ans.append(str(queue.popleft()))
+
+print("<",", ".join(ans)[:],">", sep='')
