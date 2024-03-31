@@ -1,24 +1,17 @@
-from collections import deque
+N = int(input())
+buildings = []
+for _ in range(N):
+  buildings.append(int(input()))
 
-N, M = map(int, input().split())
-lst = list(map(int, input().split()))
-queue = deque([i for i in range(1, N + 1)])
+stk = []
+ans = 0
 
-cnt = 0
+for i in buildings:
+  while stk and stk[-1] <= i:
+    stk.pop()
+    
+  stk.append(i)
 
-for n in lst:
-  while True:
-    if queue[0] == n:
-      queue.popleft()
-      break
-    else:
-      if queue.index(n) < len(queue) / 2:
-        while queue[0] != n:
-          queue.append(queue.popleft())
-          cnt += 1
-      else:
-        while queue[0] != n:
-          queue.appendleft(queue.pop())
-          cnt += 1
+  ans += len(stk) - 1
 
-print(cnt)
+print(ans)
