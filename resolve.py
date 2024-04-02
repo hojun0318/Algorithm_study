@@ -1,37 +1,37 @@
-from collections import deque
+while True:
+  flag = True
+  st = input()
+  stk = []
+  if st == '.':
+    break
 
-T = int(input())
-
-for _ in range(T):
-  p = list(map(str, input()))
-  n = int(input())
-  lst = input().rstrip()[1:-1].split(",")
-  
-  if n != 0:
-    queue = deque(lst)
-  else:
-    queue = deque([])
-
-  flagError = False
-  cnt = 0
-
-  for c in p:
-    if c == 'R':
-      cnt += 1
-    else:
-      if len(queue) == 0:
-        print('error')
-        flagError = True
-        break
+  for s in st:
+    if s == '(':
+      stk.append(s)
+    if s == '[':
+      stk.append(s)
+    if s == ')':
+      if stk :
+        if stk[-1] == '(':
+          stk.pop()
+        elif stk[-1] == '[':
+          flag = False
+          break
       else:
-        if cnt % 2 == 0:
-          queue.popleft()
-        else:
-          queue.pop()
+        flag = False
+        break
+    if s == ']':
+      if stk:
+        if stk[-1] == '[':
+          stk.pop()
+        elif stk[-1] == '(':
+          flag = False
+          break
+      else:
+        flag = False
+        break
 
-  if not flagError:
-    if cnt % 2 == 0:
-      print("[" + ",".join(queue) + "]")
-    else:
-      queue = deque(reversed(queue))
-      print("[" + ",".join(queue) + "]")
+  if stk or 0 == int(flag):
+    print('no')
+  else:
+    print('yes')
