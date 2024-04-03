@@ -1,37 +1,16 @@
-while True:
-  flag = True
-  st = input()
-  stk = []
-  if st == '.':
-    break
+sticks = list(map(str, input()))
 
-  for s in st:
-    if s == '(':
-      stk.append(s)
-    if s == '[':
-      stk.append(s)
-    if s == ')':
-      if stk :
-        if stk[-1] == '(':
-          stk.pop()
-        elif stk[-1] == '[':
-          flag = False
-          break
-      else:
-        flag = False
-        break
-    if s == ']':
-      if stk:
-        if stk[-1] == '[':
-          stk.pop()
-        elif stk[-1] == '(':
-          flag = False
-          break
-      else:
-        flag = False
-        break
+stk = []
+ans = 0
 
-  if stk or 0 == int(flag):
-    print('no')
-  else:
-    print('yes')
+for i in range(len(sticks)):
+  if sticks[i] == '(':
+    stk.append(sticks[i])
+  elif sticks[i] == ')' and stk[-1] == '(':
+    stk.pop()
+    if sticks[i - 1] == ')':
+      ans += 1
+    else:
+      ans += len(stk)
+      
+print(ans)
