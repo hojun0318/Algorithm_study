@@ -1,20 +1,27 @@
 from collections import deque
 
-N, K = map(int, input().split())
-visited = [0] * 100001
+T = int(input())
+for _ in range(T):
+  L = int(input())
+  maps = [[0] * L for _ in range(L)]
+  sx, sy = map(int, input().split())
+  ex, ey = map(int, input().split())
+  maps[sx][sy] = 1
 
-queue = deque()
-queue.append(N)
-visited[N] = 1
+  queue = deque()
+  queue.append((sx, sy))
 
-while queue:
-  x = queue.popleft()
+  while queue:
+    x, y = queue.popleft()
 
-  if x == K:
-    print(visited[x] - 1)
-    break
+    if x == ex and y == ey:
+      print(maps[x][y] - 1)
+      break
 
-  for nx in (x + 1, x - 1, x * 2):
-    if 0 <= nx <= 100000 and not visited[nx]:
-      visited[nx] = visited[x] + 1
-      queue.append(nx)
+    for dx, dy in ((1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, -1), (-2, 1), (-1, 2)):
+      nx = x + dx
+      ny = y + dy
+
+      if 0 <= nx < L and 0 <= ny < L and not maps[nx][ny]:
+        maps[nx][ny] = maps[x][y] + 1
+        queue.append((nx, ny))
