@@ -1,27 +1,25 @@
 from collections import deque
 
-T = int(input())
-for _ in range(T):
-  L = int(input())
-  maps = [[0] * L for _ in range(L)]
-  sx, sy = map(int, input().split())
-  ex, ey = map(int, input().split())
-  maps[sx][sy] = 1
+F, S, G, U, D = map(int, input().split())
+visited = [0] * 1000001
 
-  queue = deque()
-  queue.append((sx, sy))
+queue = deque()
+queue.append(S)
+visited[S] = 1
+flag = False
 
-  while queue:
-    x, y = queue.popleft()
+while queue:
+  s = queue.popleft()
 
-    if x == ex and y == ey:
-      print(maps[x][y] - 1)
-      break
+  if s == G:
+    flag = True
+    print(visited[s] - 1)
+    break
 
-    for dx, dy in ((1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, -1), (-2, 1), (-1, 2)):
-      nx = x + dx
-      ny = y + dy
+  for ns in (s + U, s - D):
+    if 1 <= ns <= F and not visited[ns]:
+      visited[ns] = visited[s] + 1
+      queue.append(ns)
 
-      if 0 <= nx < L and 0 <= ny < L and not maps[nx][ny]:
-        maps[nx][ny] = maps[x][y] + 1
-        queue.append((nx, ny))
+if flag == False:
+  print('use the stairs')
