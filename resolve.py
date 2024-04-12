@@ -1,38 +1,30 @@
-from collections import deque
+import sys
+sys.setrecursionlimit(10 ** 6)
+input = sys.stdin.readline
 
-def bfs(x, y, c):
-  queue = deque()
-  queue.append((x, y, c))
-  visited[x][y][c] = 1
+def dfs(x, res):
+  visited[x] = 1
+  cycle.append(x) # 사이클을 이루는 팀을 확인하기 위함
+  nx = choice[x]
 
-  while queue:
-    x, y, c = queue.popleft()
-
-    if x == (N - 1) and y == (M - 1):
-      return visited[x][y][c]
-      
-    for i in range(4):
-      nx = x + dx[i]
-      ny = y + dy[i]
-
-      if 0 <= nx < N and 0 <= ny < M:
-        if maps[nx][ny] == 0 and not visited[nx][ny][c]:
-          visited[nx][ny][c] = visited[x][y][c] + 1
-          queue.append((nx, ny, c))
-        if maps[nx][ny] == 1 and c == 1 and not visited[nx][ny][c - 1]:
-          visited[nx][ny][c - 1] = visited[x][y][c] + 1
-          queue.append((nx, ny, c - 1))
-
-  
-  return -1
+  if visited[nx]: # 방문 가능한 곳이 끝났는지
+    if nx in cycle: # 사이클 가능 여부
+      res += cycle[cycle.index(nx) : ]  # 사이클 되는 구간부터만 팀을 이룸
+    return
+  else:
+    dfs(nx, res)
 
 
 
-N, M = map(int, input().split())
-maps = [list(map(int, input())) for _ in range(N)]
-visited = [[[0] * 2 for _ in range(M)] for _ in range(N)]
+for _ in range(int(input())):
+  n = int(input())
+  choice = [0] + list(map(int, input().split()))
+  visited = [0] * (n + 1)
+  res = []
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+  for i in range(1, n + 1):
+    if not visited[i]:  # 방문하지 않은 곳이라면
+      cycle = []
+      dfs(i, res)
 
-print(bfs(0, 0, 1))
+  print(n - len(res))   # 팀에 없는 사람 수
