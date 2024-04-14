@@ -1,30 +1,66 @@
-import sys
-sys.setrecursionlimit(10 ** 6)
-input = sys.stdin.readline
+from collections import deque
 
-def dfs(x, res):
-  visited[x] = 1
-  cycle.append(x) # 사이클을 이루는 팀을 확인하기 위함
-  nx = choice[x]
+N, M = map(int, input().split())
+icebergs = [list(map(int, input().split())) for _ in range(N)]
 
-  if visited[nx]: # 방문 가능한 곳이 끝났는지
-    if nx in cycle: # 사이클 가능 여부
-      res += cycle[cycle.index(nx) : ]  # 사이클 되는 구간부터만 팀을 이룸
-    return
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+year = 0
+
+def bfs():
+  global year
+  queue = deque()
+  for i in range(N):
+    for j in range(M):
+      if icebergs[i][j]:
+        queue.append((i, j))
+
+  bfs_visited = [[0] * M for _ in range(N)]
+
+  while queue:
+    x, y = queue.popleft()
+    bfs_visited[x][y] = 1
+
+    for d in range(4):
+      nx = x + dx[d]
+      ny = y + dy[d]
+
+      if 0 <= nx < N and 0 <= ny < M:
+        if icebergs[nx][ny] == 0 and not bfs_visited[nx][ny]:
+          if icebergs[x][y] > 0:
+            icebergs[x][y] -= 1
+  
+  year += 1
+
+  new_queue = deque()
+  visited = [[0] * M for _ in range(N)]
+  cnt = 0
+
+  for r in range(N):
+    for c in range(M):
+      if icebergs[r][c] and not visited[r][c]:
+        new_queue.append((r, c))
+        cnt += 1
+
+        while new_queue:
+          r, c = new_queue.popleft()
+
+          for d in range(4):
+            nr = r + dx[d]
+            nc = c + dy[d]
+
+            if 0 <= nr < N and 0 <= nc < M:
+              if icebergs[nr][nc] and not visited[nr][nc]:
+                visited[nr][nc] = 1
+                new_queue.append((nr, nc))
+
+  if cnt >= 2:
+    print(year)
   else:
-    dfs(nx, res)
+    if cnt == 0:
+      print(0)
+    else:
+      bfs()
 
-
-
-for _ in range(int(input())):
-  n = int(input())
-  choice = [0] + list(map(int, input().split()))
-  visited = [0] * (n + 1)
-  res = []
-
-  for i in range(1, n + 1):
-    if not visited[i]:  # 방문하지 않은 곳이라면
-      cycle = []
-      dfs(i, res)
-
-  print(n - len(res))   # 팀에 없는 사람 수
+bfs()
