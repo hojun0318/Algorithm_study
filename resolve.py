@@ -3,64 +3,74 @@ from collections import deque
 N, M = map(int, input().split())
 icebergs = [list(map(int, input().split())) for _ in range(N)]
 
+queue = deque()
+
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
-year = 0
+for i in range(N):
+  for j in range(M):
+    if icebergs[i][j]:
+      queue.append((i, j))
 
-def bfs():
-  global year
-  queue = deque()
-  for i in range(N):
-    for j in range(M):
-      if icebergs[i][j]:
-        queue.append((i, j))
+cnt = 0
+flag = True
 
-  bfs_visited = [[0] * M for _ in range(N)]
+while queue:
+  next = []
+  melts = []
 
-  while queue:
-    x, y = queue.popleft()
-    bfs_visited[x][y] = 1
+  # 녹는 양 계산
+  for x, y in queue:
+    melt = 0
 
-    for d in range(4):
-      nx = x + dx[d]
-      ny = y + dy[d]
+    for i in range(4):
+      nx = x + dx[i]
+      ny = y + dy[i]
 
-      if 0 <= nx < N and 0 <= ny < M:
-        if icebergs[nx][ny] == 0 and not bfs_visited[nx][ny]:
-          if icebergs[x][y] > 0:
-            icebergs[x][y] -= 1
-  
-  year += 1
+      if 0 <= nx < N and 0 <= ny < M and icebergs[nx][ny] <= 0:
+        melt += 1
+    melts.append(melt)
 
-  new_queue = deque()
+  for k in range(len(queue)):
+    r = queue[k][0]
+    c = queue[k][1]
+    icebergs[r][c] -= melts[k]
+
+    if icebergs[r][c] > 0:
+      next.append((r, c))
+
+  # 빙하가 남은 위치 다시 큐에 삽입
+  queue = next[:]
+
+  if not next:
+    break
+
+  ice = deque([next[0]])
+  ice_cnt = 1
   visited = [[0] * M for _ in range(N)]
-  cnt = 0
+  visited[next[0][0]][next[0][1]] = 1
 
-  for r in range(N):
-    for c in range(M):
-      if icebergs[r][c] and not visited[r][c]:
-        new_queue.append((r, c))
-        cnt += 1
+  while ice:
+    x, y = ice.popleft()
 
-        while new_queue:
-          r, c = new_queue.popleft()
+    for i in range(4):
+      nx = x + dx[i]
+      ny = y + dy[i]
 
-          for d in range(4):
-            nr = r + dx[d]
-            nc = c + dy[d]
+      if 0 <= nx < N and 0 <= ny < M and icebergs[nx][ny] > 0 and not visited[nx][ny]:
+        visited[nx][ny] = 1
+        ice.append((nx, ny))
+        ice_cnt += 1
+  
+  # 소요 기간 계산
+  cnt += 1
 
-            if 0 <= nr < N and 0 <= nc < M:
-              if icebergs[nr][nc] and not visited[nr][nc]:
-                visited[nr][nc] = 1
-                new_queue.append((nr, nc))
+  if ice_cnt != len(queue):
+    flag = False
+    break
 
-  if cnt >= 2:
-    print(year)
-  else:
-    if cnt == 0:
-      print(0)
-    else:
-      bfs()
-
-bfs()
+if flag:
+  print(0)
+else:
+  print(cnt)
