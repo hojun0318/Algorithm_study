@@ -1,69 +1,35 @@
 from collections import deque
 
-N = int(input())
-maps = [list(map(int, input().split())) for _ in range(N)]
-visited = [[0] * N for _ in range(N)]
+MAX = 100001
+visited = [0] * (MAX)
+N, K = map(int, input().split())
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
-
-cnt = 0
-ans = 100001
 
 def bfs(x, y):
   queue = deque()
-  queue.append((x, y))
-  maps[x][y] = cnt
-  visited[x][y] = 1
+
+  if x == 0:
+    queue.append(1)
+  else:
+    queue.append(x)
 
   while queue:
-    x, y = queue.popleft()
+    x = queue.popleft()
 
-    for i in range(4):
-      nx = x + dx[i]
-      ny = y + dy[i]
+    if y == x:
+      return visited[x]
+    
+    for nx in (x - 1, x + 1, x * 2):
+      if 0 <= nx < MAX and visited[nx] == 0:
+        if nx == x * 2:
+          visited[nx] = visited[x]
+          queue.appendleft(nx)
+        else:
+          visited[nx] = visited[x] + 1
+          queue.append(nx)
 
-      if 0 <= nx < N and 0 <= ny < N and maps[nx][ny] == 1 and not visited[nx][ny]:
-        maps[nx][ny] = cnt
-        queue.append((nx, ny))
-        visited[nx][ny] = 1
+if N == 0:
+  print(bfs(N, K) + 1)
 
-
-def load_bfs(v):
-  queue = deque()
-  visited = [[-1] * N for _ in range(N)]
-
-  for i in range(N):
-    for j in range(N):
-      if maps[i][j] == v:
-        visited[i][j] = 0
-        queue.append((i, j))
-
-  while queue:
-    x, y = queue.popleft()
-
-    for k in range(4):
-      nx = x + dx[k]
-      ny = y + dy[k]
-
-      if 0 <= nx < N and 0 <= ny < N:
-        if maps[nx][ny] and maps[nx][ny] != v:
-          return visited[x][y]
-        
-        if not maps[nx][ny] and visited[nx][ny] == -1:
-          visited[nx][ny] = visited[x][y] + 1
-          queue.append((nx, ny))
-
-  return 10001
-
-for i in range(N):
-  for j in range(N):
-    if maps[i][j] == 1 and not visited[i][j]:
-      cnt += 1
-      bfs(i, j)
-
-
-for v in range(1, (cnt + 1)):
-  ans = min(ans, load_bfs(v))
-
-print(ans)
+else:
+  print(bfs(N, K))
