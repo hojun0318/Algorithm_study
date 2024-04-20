@@ -1,35 +1,38 @@
 from collections import deque
 
-N, K = map(int, input().split())
+N, M, K = map(int, input().split())
+matrix = [list(map(int, input())) for _ in range(N)]
+visited = [[[0] * (K + 1) for _ in range(M)] for _ in range(N)]
+visited[0][0][0] = 1
 
-visited = [0] * 100001
-node = [0] * 100001
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
-def path(x):
-  lst = []
-  tmp = x
-  for _ in range(visited[x] + 1):
-    lst.append(tmp)
-    tmp = node[tmp]
-  print(' '.join(map(str, lst[::-1])))
-
-def bfs():
+def bfs(x, y, k):
   queue = deque()
-  queue.append(N)
+  queue.append((x, y, k))
 
   while queue:
-    s = queue.popleft()
+    x, y, k = queue.popleft()
 
-    if s == K:
-      print(visited[s])
-      path(s)
-      return s
+    if x == (N - 1) and y == (M - 1):
+      return visited[x][y][k]
+
+    for i in range(4):
+      nx = x + dx[i]
+      ny = y + dy[i]
+
+      if 0 <= nx < N and 0 <= ny < M:
+        if visited[nx][ny][k] == 0 and matrix[nx][ny] == 0:
+          queue.append((nx, ny, k))
+          visited[nx][ny][k] = visited[x][y][k] + 1
+
+        if k < K:
+          if matrix[nx][ny] == 1 and visited[nx][ny][k + 1] == 0:
+            queue.append((nx, ny, k + 1))
+            visited[nx][ny][k + 1] = visited[x][y][k] + 1
   
-    for ns in (s - 1, s + 1, s * 2):
-      if 0 <= ns < 100001 and not visited[ns]:
-        visited[ns] = visited[s] + 1
-        queue.append(ns)
-        node[ns] = s
+  return -1
 
 
-bfs()
+print(bfs(0, 0, 0))
