@@ -1,46 +1,48 @@
 from collections import deque
 
-N, M, K = map(int, input().split())
-matrix = [list(map(int, input())) for _ in range(N)]
-visited = [[K + 1 for _ in range(M)] for _ in range(N)]
-visited[0][0] = 0
+N, M, P = map(int, input().split())
+S = [0] + list(map(int,input().split()))
+maps = [list(map(str, input())) for _ in range(N)]
+castle = [deque() for _ in range(P + 1)]
+ans = [0] * (P + 1)
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+dx = [-1, 0, 0, 1]
+dy = [0, -1, 1, 0]
 
-def bfs(start):
-  queue = deque()
-  queue.append(start)
-  ans = 1
-  time = True
+for p in range(1, P + 1):
+  for i in range(N):
+    for j in range(M):
+      if maps[i][j] == str(p):
+        castle[p].append((i, j))
+        ans[p] += 1
 
-  while queue:
-    for _ in range(len(queue)):
-      x, y, k = queue.popleft()
+flag = True
 
-      if x == (N - 1) and y == (M - 1):
-        print(ans)
-        return
-      
-      for i in range(4):
-        nx = x + dx[i]
-        ny = y + dy[i]
+while flag:
+  flag = False
+  
+  for q in range(1, P + 1):
+    if not castle[q]:
+      continue
+  
+    queue = castle[q]
 
-        if 0 <= nx < N and 0 <= ny < M and visited[nx][ny] > k:
-          if matrix[nx][ny] == 0:
-            queue.append((nx, ny, k))
-            visited[nx][ny] = k
-          elif k < K:
-            if not time: 
-              queue.append((x, y, k))
-            else: 
-              visited[nx][ny] = k
-              queue.append((nx, ny, k + 1))
+    for _ in range(S[q]):
+      if not q:
+        break
 
-    ans += 1
-    time = not time
+      for _ in range(len(queue)):
+        x, y = queue.popleft()
 
-  print(-1)
-  return
+        for i in range(4):
+          nx = x + (dx[i])
+          ny = y + (dy[i])
 
-bfs((0, 0, 0))
+          if 0 <= nx < N and 0 <= ny < M:
+            if maps[nx][ny] == '.':
+              maps[nx][ny] = str(q)
+              ans[q] += 1
+              queue.append((nx, ny))
+              flag = True
+
+print(*ans[1:])
