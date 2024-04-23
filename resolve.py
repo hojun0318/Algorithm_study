@@ -1,48 +1,52 @@
 from collections import deque
 
-N, M, P = map(int, input().split())
-S = [0] + list(map(int,input().split()))
-maps = [list(map(str, input())) for _ in range(N)]
-castle = [deque() for _ in range(P + 1)]
-ans = [0] * (P + 1)
+N, M = map(int, input().split())
 
-dx = [-1, 0, 0, 1]
-dy = [0, -1, 1, 0]
+rooms = [[0] * N for _ in range(N)]
+rooms[0][0] = 1
+visited = [[0] * N for _ in range(N)]
+visited[0][0] = 1
 
-for p in range(1, P + 1):
-  for i in range(N):
-    for j in range(M):
-      if maps[i][j] == str(p):
-        castle[p].append((i, j))
-        ans[p] += 1
+switch = []
 
-flag = True
+for _ in range(M):
+  x, y, a, b = map(int, input().split())
+  switch.append([x, y, a, b])
 
-while flag:
-  flag = False
-  
-  for q in range(1, P + 1):
-    if not castle[q]:
-      continue
-  
-    queue = castle[q]
+dr = [-1, 1, 0, 0]
+dc = [0, 0, -1, 1]
 
-    for _ in range(S[q]):
-      if not q:
-        break
+def bfs(x, y):
+  ans = 1
+  queue = deque()
+  queue.append((x, y))
 
-      for _ in range(len(queue)):
-        x, y = queue.popleft()
+  while queue:
+    r, c = queue.popleft()
 
-        for i in range(4):
-          nx = x + (dx[i])
-          ny = y + (dy[i])
+    for x, y, a, b in switch:
+      if r == x - 1 and c == y - 1:
+        if not rooms[a - 1][b - 1]:
+          rooms[a - 1][b - 1] = 1
+          ans += 1
+        
+          for i in range(4):
+            nr = (a - 1) + dr[i]
+            nc = (b - 1) + dc[i]
 
-          if 0 <= nx < N and 0 <= ny < M:
-            if maps[nx][ny] == '.':
-              maps[nx][ny] = str(q)
-              ans[q] += 1
-              queue.append((nx, ny))
-              flag = True
+            if 0 <= nr < N and 0 <= nc < N:
+              if visited[nr][nc] == 1:
+                queue.append((nr, nc))
+      
+    for j in range(4):
+      nr = r + dr[j]
+      nc = c + dc[j]
 
-print(*ans[1:])
+      if 0 <= nr < N and 0 <= nc < N:
+        if rooms[nr][nc] == 1 and not visited[nr][nc]:
+          queue.append((nr, nc))
+          visited[nr][nc] = 1
+
+  return ans
+
+print(bfs(0, 0))
