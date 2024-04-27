@@ -1,16 +1,31 @@
-def chatbot(n, cnt):
-    print("____" * cnt + '"재귀함수가 뭔가요?"')
+N = int(input())
+board = [list(map(int, input().split())) for _ in range(N)]
 
-    if cnt == n:
-        print("____" * cnt + '"재귀함수는 자기 자신을 호출하는 함수라네"')
-    else:
-        print("____" * cnt + '"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어.')
-        print("____" * cnt + "마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지.")
-        print("____" * cnt + '그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어."')
-        chatbot(n, cnt + 1)
-    print("____" * cnt + "라고 답변하였지.")
+result_minus = 0
+result_zero = 0
+result_plus = 0
 
+def dfs(x, y, n):
+  global result_minus, result_zero, result_plus
+  num_check = board[x][y]
+  
+  for i in range(x, x + n):
+    for j in range(y, y + n):
+      if board[i][j] != num_check:
+        for k in range(3):
+          for l in range(3):
+            dfs(x + k * n // 3, y + l * n // 3, n // 3)
+        return
+      
+  if num_check == -1:
+    result_minus += 1
+  elif num_check == 0:
+    result_zero += 1
+  else:
+    result_plus += 1
 
-n = int(input())
-print("어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다.")
-chatbot(n, 0)
+dfs(0, 0, N)
+
+print(result_minus)
+print(result_zero)
+print(result_plus)
