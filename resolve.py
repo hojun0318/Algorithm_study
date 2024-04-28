@@ -1,11 +1,15 @@
-A, B, C = map(int, input().split())
+N = int(input())
 
-def POW(a, b, c):
-  if b == 1:
-    return a % c
-  elif b % 2 == 0:
-    return (POW(a, b // 2, c) ** 2) % C
-  else:
-    return ((POW(a, b // 2, c) ** 2) * a) % C
+def hanoi(n, start, end):
+  if n == 1:
+    print(start, end)
+    return
   
-print(POW(A, B, C))
+  hanoi(n - 1, start, 6 - start - end)  # 1단계
+  print(start, end) # 2단계
+  hanoi(n - 1, 6 - start - end, end)  # 3단계
+
+
+
+print(2 ** N - 1)
+hanoi(N, 1, 3)
