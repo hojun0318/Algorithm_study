@@ -1,25 +1,16 @@
-def zet(n, r, c):
-    global res
+def chatbot(n, cnt):
+    print("____" * cnt + '"재귀함수가 뭔가요?"')
 
-    # 찾는 좌표라면 res를 출력하고 종료
-    if r == R and c == C:
-        print(int(res))
-        exit(0)
-
-    # 탐색 증인 배열 중에 찾는 좌표가 없다면 좌표에 크기를 더한다.
-    if not (r <= R < r + n and c <= C < c + n):
-        res += n * n
-        return
-
-    # 1/2/3/4사분면을 재귀적으로 탐색
-    zet(n/2, r, c) # 1사분면
-    zet(n/2, r, c + n/2) # 2사분면
-    zet(n/2, r + n/2, c) # 3사분면
-    zet(n/2, r + n/2, c + n/2) # 4사분면
+    if cnt == n:
+        print("____" * cnt + '"재귀함수는 자기 자신을 호출하는 함수라네"')
+    else:
+        print("____" * cnt + '"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어.')
+        print("____" * cnt + "마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지.")
+        print("____" * cnt + '그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어."')
+        chatbot(n, cnt + 1)
+    print("____" * cnt + "라고 답변하였지.")
 
 
-N, R, C = map(int, input().split())
-res = 0
-
-# 2^n을 0, 0부터 탐색
-zet(2 ** N, 0, 0)
+n = int(input())
+print("어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다.")
+chatbot(n, 0)
