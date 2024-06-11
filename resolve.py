@@ -1,31 +1,33 @@
 def dfs(n, lst):
-  if n == M:
+  if n == 6:
     ans.append(lst)
     return
   
-  flag = 0
-  for i in range(N):
+  for i in range(k):
     if lst:
-      if visited[i] < M and flag != nums[i] and lst[-1] <= nums[i]:
-        visited[i] += 1
-        flag = nums[i]
-        dfs(n + 1, lst + [nums[i]])
-        visited[i] -= 1
+      if not visited[i] and lst[-1] < S[i]:
+        visited[i] = 1
+        dfs(n + 1, lst + [S[i]])
+        visited[i] = 0
     else:
-      if visited[i] < M and flag != nums[i]:
-        visited[i] += 1
-        flag = nums[i]
-        dfs(n + 1, lst + [nums[i]])
-        visited[i] -= 1
+      if not visited[i]:
+        visited[i] = 1
+        dfs(n + 1, lst + [S[i]])
+        visited[i] = 0
 
 
-N, M = map(int, input().split())
-nums = sorted(list(map(int, input().split())))
+while True:
+  lst = list(map(int, input().split()))
+  k = lst[0]
+  S = lst[1:]
 
-ans = []
-visited = [0] * N
+  if k == 0:
+    break
+  
+  ans = []
+  visited = [0] * k
+  dfs(0, [])
 
-dfs(0, [])
-
-for lst in ans:
-  print(*lst)
+  for lst in ans:
+    print(*lst)
+  print()
