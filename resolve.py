@@ -5,18 +5,11 @@ def dfs(n, lst):
   
   flag = 0
   for i in range(N):
-    if lst:
-      if lst[-1] <= nums[i] and not visited[i] and flag != nums[i]:
-        flag = nums[i]
-        visited[i] = 1
-        dfs(n + 1, lst + [nums[i]])
-        visited[i] = 0
-    else:
-      if not visited[i] and flag != nums[i]:
-        flag = nums[i]
-        visited[i] = 1
-        dfs(n + 1, lst + [nums[i]])
-        visited[i]  = 0
+    if visited[i] < M and flag != nums[i]:
+      visited[i] += 1
+      flag = nums[i]
+      dfs(n + 1, lst + [nums[i]])
+      visited[i] -= 1
 
 
 N, M = map(int, input().split())
