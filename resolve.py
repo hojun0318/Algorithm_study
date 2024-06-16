@@ -4,10 +4,16 @@ def dfs(n, lst):
     return
   
   for i in range(N):
-    if visited[i] < M:
-      visited[i] += 1
-      dfs(n + 1, lst +[nums[i]])
-      visited[i] -= 1
+    if lst:
+      if lst[-1] <= nums[i] and visited[i] < M:
+        visited[i] += 1
+        dfs(n + 1, lst + [nums[i]])
+        visited[i] -= 1
+    else:
+      if visited[i] < M:
+        visited[i] += 1
+        dfs(n + 1, lst + [nums[i]])
+        visited[i] -= 1
 
 
 N, M = map(int, input().split())
