@@ -4,37 +4,62 @@
 from collections import deque
 
 def bfs():
-  ans = 0
   queue = deque()
-  for i in range(N):
-    for j in range(M):
-      if boxs[i][j] == 1:
-        queue.append((i, j))
+
+  for x in range(R):
+    for y in range(C):
+      if load[x][y] == 'F':
+        fire_visited[x][y] = 1
+        queue.append((x, y, 'f'))
+
+  for r in range(R):
+    for c in range(C):
+      if load[r][c] == 'J':
+        jihun_visited[r][c] = 1
+        queue.append((r, c, 'j'))
 
   while queue:
-    x, y = queue.popleft()
+    x, y, s = queue.popleft()
+    if s == 'j':
+      if x == (R - 1) or x == 0 or y == 0 or y ==(C - 1):
+        return jihun_visited[x][y]
+      
+    
+    for i in range(4):
+      nx = x + dx[i]
+      ny = y + dy[i]
 
-    for d in range(4):
-      nx = x + dx[d]
-      ny = y + dy[d]
+      if s == 'j':
+        if 0 <= nx < R and 0 <= ny < C:
+          if load[nx][ny] == '.':
+            if not jihun_visited[nx][ny] and not fire_visited[nx][ny]:
+              jihun_visited[nx][ny] = jihun_visited[x][y] + 1
+              queue.append((nx, ny, 'j'))
 
-      if 0 <= nx < N and 0 <= ny < M:
-        if boxs[nx][ny] == 0:
-          queue.append((nx, ny))
-          boxs[nx][ny] = boxs[x][y] + 1
+      if s == 'f':
+        if 0 <= nx < R and 0 <= ny < C:
+          if load[nx][ny] == '.' or load[nx][ny] == 'J':
+            if not fire_visited[nx][ny]:
+              fire_visited[nx][ny] = fire_visited[x][y] + 1
+              queue.append((nx, ny, 'f'))
 
-  for lst in boxs:
-    for chk in lst:
-      if chk == 0:
-        return -1
-      ans = max(ans, chk)
+  return "IMPOSSIBLE"
 
-  return ans - 1
 
-M, N = map(int, input().split())
-boxs = [list(map(int, input().split())) for _ in range(N)]
+R, C = map(int, input().split())
+load = [list(map(str, input())) for _ in range(R)]
+jihun_visited = [[0] * C for _ in range(R)]
+fire_visited = [[0] * C for _ in range(R)]
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
+
 print(bfs())
+
+
+for i in fire_visited:
+  print(i)
+print('-----------------')
+for i in jihun_visited:
+  print(i)
