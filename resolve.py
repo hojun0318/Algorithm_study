@@ -1,50 +1,44 @@
 # import sys
 # sys.stdin = open("input.txt", "r")
 
-from collections import deque
+def dfs(n, cnt):
+  global ans
 
-def bfs():
-  queue = deque()
+  if ans >= (cnt + (N - n) * 2):
+    return
 
-  for l in range(L):
-    for r in range(R):
-      for c in range(C):
-        if buildings[l][r][c] == 'S':
-          visited[l][r][c] = 1
-          queue.append((l, r, c))
+  if n == N:
+    ans = max(ans, cnt)
+    return
+  
+  if eggs[n][0] <= 0:
+    dfs(n + 1, cnt)
+  
+  else:
+    flag = False
 
-  while queue:
-    z, x, y = queue.popleft()
+    for i in range(N):
+      if i == n or eggs[i][0] <= 0:
+        continue
 
-    if buildings[z][x][y] == 'E':
-      return f'Escaped in {visited[z][x][y] - 1} minute(s).'
+      flag = True
+      eggs[n][0] -= eggs[i][1]
+      eggs[i][0] -= eggs[n][1]
 
-    for i in range(6):
-      nz = z + dz[i]
-      nx = x + dx[i]
-      ny = y + dy[i]
+      dfs(n + 1, cnt + int(eggs[n][0] <= 0) + int(eggs[i][0] <= 0))
 
-      if 0 <= nz < L and 0 <= nx < R and 0 <= ny < C:
-        if not visited[nz][nx][ny] and buildings[nz][nx][ny] != '#':
-          visited[nz][nx][ny] = visited[z][x][y] + 1
-          queue.append((nz, nx, ny))
+      eggs[n][0] += eggs[i][1]
+      eggs[i][0] += eggs[n][1]
+    
+    if flag == False:
+      dfs(n + 1, cnt)
 
-  return "Trapped!"
 
-while True:
-  L, R, C = map(int, input().split())
-  if L == 0 and R == 0 and C == 0:
-    break
 
-  visited = [[[0] * C for _ in range(R)] for _ in range(L)]  
-  buildings = []
+N = int(input())
+eggs = [list(map(int, input().split())) for _ in range(N)]
+ans = 0
 
-  for _ in range(L):
-    buildings.append([list(map(str, input())) for _ in range(R)])
-    temp = input()
+dfs(0, 0)
 
-  dz = [1, -1, 0, 0, 0, 0]
-  dx = [0, 0, -1, 1, 0, 0]
-  dy = [0, 0, 0, 0, -1, 1]
-
-  print(bfs())
+print(ans)
