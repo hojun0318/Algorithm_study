@@ -1,49 +1,48 @@
 from collections import deque
 
-def bfs():
-  flag = True
-  
-  while flag:
-    flag = False
+def bfs(x, y):
+  now = deque()
+  now.append((x, y))
 
-    for player in range(1, P + 1):
-      if not castle[player]:
-        continue
+  while now:
+    x, y = now.popleft()
+    if rooms[x][y]:
+      queue = rooms[x][y]
 
-      queue = castle[player]
+      for _ in range(len(queue)):
+        a, b = queue.popleft()
+        if visited[a][b] == 0:
+          visited[a][b] = 1
 
-      for _ in range(S[player]):
-        for _ in range(len(queue)):
-          x, y = queue.popleft()
+    for i in range(4):
+      nx = x + dx[i]
+      ny = y + dy[i]
 
-          for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
-
-            if 0 <= nx < N and 0 <= ny < M:
-              if maps[nx][ny] == '.':
-                maps[nx][ny] = str(player)
-                ans[player] += 1
-                queue.append((nx, ny))
-                flag = True
+      if 0 <= nx < N and 0 <= ny < M:
+        if visited[nx][ny] == 1:
+          now.append((nx, ny))
+          now.append((x, y))
 
 
-N, M, P = map(int, input().split())
-S = [0] + list(map(int,input().split()))
-maps = [list(map(str, input())) for _ in range(N)]
-castle = [deque() for _ in range(P + 1)]
-ans = [0] * (P + 1)
 
-dx = [-1, 0, 0, 1]
-dy = [0, -1, 1, 0]
+N, M = map(int, input().split())
+rooms = [[deque() for _ in range(N + 2)] for _ in range(N + 2)]
+visited = [[0 for _ in range(N + 2)] for _ in range(N + 2)]
+visited = [[0] * (N + 2)] + [[0] * (N + 2) for _ in range(N)] + [[0] * (N + 2)]
+x = y = 1
+visited[x][y] = 1
 
-for p in range(1, P + 1):
-  for i in range(N):
-    for j in range(M):
-      if maps[i][j] == str(p):
-        castle[p].append((i, j))
-        ans[p] += 1
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
-bfs()
+for _ in range(M):
+  x, y, a, b = map(int, input().split())
+  rooms[x][y].append((a, b))
 
-print(*ans[1:])
+for m in rooms:
+  print(m)
+
+bfs(x, y)
+
+
+queue = rooms[1][1]
