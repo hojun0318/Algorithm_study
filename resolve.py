@@ -1,6 +1,7 @@
 from collections import deque
 
 def bfs(x, y):
+  global ans
   now = deque()
   now.append((x, y))
 
@@ -11,26 +12,39 @@ def bfs(x, y):
 
       for _ in range(len(queue)):
         a, b = queue.popleft()
-        if visited[a][b] == 0:
-          visited[a][b] = 1
+        if not rights[a][b]:
+          rights[a][b] = 1
+          ans += 1
 
-    for i in range(4):
-      nx = x + dx[i]
-      ny = y + dy[i]
+          for i in range(4):
+            bx = a + dx[i]
+            by = b + dy[i]
 
-      if 0 <= nx < N and 0 <= ny < M:
-        if visited[nx][ny] == 1:
-          now.append((nx, ny))
-          now.append((x, y))
+            if 0 <= bx < N and 0 <= by < N:
+              if visited[bx][by] == 1:
+                now.append((bx, by))
+    
+      for j in range(4):
+        nx = x + dx[j]
+        ny = y + dy[j]
 
+        if 0 <= nx < N and 0 <= ny < N:
+          if rights[nx][ny] == 1 and not visited[nx][ny]:
+            now.append((nx, ny))
+            visited[nx][ny] = 1
+
+  return ans
 
 
 N, M = map(int, input().split())
 rooms = [[deque() for _ in range(N + 2)] for _ in range(N + 2)]
+rights = [[0 for _ in range(N + 2)] for _ in range(N + 2)]
 visited = [[0 for _ in range(N + 2)] for _ in range(N + 2)]
-visited = [[0] * (N + 2)] + [[0] * (N + 2) for _ in range(N)] + [[0] * (N + 2)]
-x = y = 1
-visited[x][y] = 1
+
+ans = 0
+
+rights[1][1] = 1
+visited[1][1] = 1
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
@@ -39,10 +53,5 @@ for _ in range(M):
   x, y, a, b = map(int, input().split())
   rooms[x][y].append((a, b))
 
-for m in rooms:
-  print(m)
 
-bfs(x, y)
-
-
-queue = rooms[1][1]
+print(bfs(1, 1))
