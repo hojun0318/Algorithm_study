@@ -1,18 +1,43 @@
-def factorial_iterative(n):
-  result = 1
+from collections import deque
 
-  for i in range(1, n + 1):
-    result *= i
-  
-  return result
+def dfs(v):
+  dfs_visited[v] = 1
+  print(v, end = ' ')
 
-print(factorial_iterative(10))
+  graph[v].sort()
+  for i in graph[v]:
+    if not dfs_visited[i]:
+      dfs(i)
 
 
-def factorial_recursive(m):
-  if m <= 1:
-    return 1
-  
-  return m * factorial_recursive(m - 1)
+def bfs(start):
+  queue = deque()
+  queue.append(start)
+  bfs_visited[start] = 1
 
-print(factorial_recursive(10))
+  while queue:
+    v = queue.popleft()
+    print(v, end = ' ')
+
+    graph[v].sort()
+    for i in graph[v]:
+      if not bfs_visited[i]:
+        queue.append(i)
+        bfs_visited[i] = 1
+
+
+N, M, V = map(int, input().split())
+
+graph = [[] for _ in range((N + 1))]
+
+dfs_visited = [0] * (N + 1)
+bfs_visited = [0] * (N + 1)
+
+for _ in range(M):
+  a, b = map(int, input().split())
+  graph[a].append(b)
+  graph[b].append(a)
+
+dfs(V)
+print()
+bfs(V)
