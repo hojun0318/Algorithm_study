@@ -1,8 +1,1 @@
-1
-5 5
-aaaaa
-aAAAa
-aA$Aa
-aAAAa
-aaaaa
-0
+10
