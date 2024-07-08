@@ -1,11 +1,21 @@
-A, B, C = map(int, input().split())
-
-def POW(a, b, c):
-  if b == 1:
-    return a % c
-  elif b % 2 == 0:
-    return (POW(a, b // 2, c) ** 2) % C
-  else:
-    return ((POW(a, b // 2, c) ** 2) * a) % C
+def dfs(n , lst):
+  if n == M:
+    ans.append(lst)
+    return
   
-print(POW(A, B, C))
+  for i in range(1, N + 1):
+    if not visited[i]:
+      visited[i] = 1
+      dfs(n + 1, lst + [i])
+      visited[i] = 0
+
+
+N, M = map(int, input().split())
+
+ans = []
+visited = [0] * (N + 1)
+
+dfs(0, [])
+
+for lst in ans:
+  print(*lst)
