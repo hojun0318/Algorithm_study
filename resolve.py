@@ -1,21 +1,25 @@
-def dfs(n , lst):
-  if n == M:
-    ans.append(lst)
+def dfs(n):
+  global ans
+  if n == N:
+    ans += 1
     return
   
-  for i in range(1, N + 1):
-    if not visited[i]:
-      visited[i] = 1
-      dfs(n + 1, lst + [i])
-      visited[i] = 0
+  for i in range(N):
+    if visited1[i] == visited2[n + i] == visited3[n - i] == 0:
+      visited1[i] = visited2[n + i] = visited3[n - i] = 1
+      dfs(n + 1)
+      visited1[i] = visited2[n + i] = visited3[n - i] = 0
 
 
-N, M = map(int, input().split())
 
-ans = []
-visited = [0] * (N + 1)
 
-dfs(0, [])
+N = int(input())
 
-for lst in ans:
-  print(*lst)
+ans = 0
+visited1 = [0] * N
+visited2 = [0] * (N * 2)
+visited3 = [0] * (N * 2)
+
+dfs(0)
+
+print(ans)
