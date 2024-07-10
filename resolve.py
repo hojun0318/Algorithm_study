@@ -1,23 +1,19 @@
-def dfs(lst):
+def dfs(n, sm, cnt):
   global ans
-  if sum(lst) == S:
-    ans += 1
+
+  if n == N:
+    if sm == S and cnt > 0:
+      ans += 1
     return
-  print(lst)
-  for i in range(N):
-    if not visited[i]:
-      visited[i] = 1
-      dfs(lst + [nums[i]])
-      
-      visited[i] = 0
+  
+  dfs(n + 1, sm + lst[n], cnt + 1)
+  dfs(n + 1, sm, cnt)
 
 
 N, S = map(int, input().split())
-nums = list(map(int, input().split()))
-visited = [0] * N
-
+lst = list(map(int, input().split()))
 ans = 0
 
-dfs([])
+dfs(0, 0, 0)
 
 print(ans)
