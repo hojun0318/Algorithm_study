@@ -1,25 +1,23 @@
-def dfs(n):
+def dfs(lst):
   global ans
-  if n == N:
+  if sum(lst) == S:
     ans += 1
     return
-  
+  print(lst)
   for i in range(N):
-    if visited1[i] == visited2[n + i] == visited3[n - i] == 0:
-      visited1[i] = visited2[n + i] = visited3[n - i] = 1
-      dfs(n + 1)
-      visited1[i] = visited2[n + i] = visited3[n - i] = 0
+    if not visited[i]:
+      visited[i] = 1
+      dfs(lst + [nums[i]])
+      
+      visited[i] = 0
 
 
-
-
-N = int(input())
+N, S = map(int, input().split())
+nums = list(map(int, input().split()))
+visited = [0] * N
 
 ans = 0
-visited1 = [0] * N
-visited2 = [0] * (N * 2)
-visited3 = [0] * (N * 2)
 
-dfs(0)
+dfs([])
 
 print(ans)
