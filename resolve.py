@@ -3,22 +3,19 @@ def dfs(n, lst):
     ans.append(lst)
     return
   
-  for i in range(1, N + 1):
-    if visited[i] < M:
-      if lst:
-        if lst[-1] <= i:
-          visited[i] += 1
-          dfs(n + 1, lst + [i])
-          visited[i] -= 1
-      else:
-        visited[i] += 1
-        dfs(n + 1, lst + [i])
-        visited[i] -= 1
+  for i in range(N):
+    if not visited[i]:
+      visited[i] = 1
+      dfs(n + 1, lst + [nums[i]])
+      visited[i] = 0
 
 
 N, M = map(int, input().split())
+nums = list(map(int, input().split()))
+nums.sort()
+
 ans = []
-visited = [0] * (N + 1)
+visited = [0] * N
 
 dfs(0, [])
 
