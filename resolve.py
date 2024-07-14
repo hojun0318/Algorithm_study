@@ -1,15 +1,13 @@
 def dfs(n, lst):
   if n == M:
-    lst.sort()
-    if lst not in ans:
-      ans.append(lst)
+    ans.append(lst)
     return
   
   for i in range(1, N + 1):
-    if not visited[i]:
-      visited[i] = 1
+    if visited[i] < M:
+      visited[i] += 1
       dfs(n + 1, lst + [i])
-      visited[i] = 0
+      visited[i] -= 1
 
 N, M = map(int, input().split())
 ans = []
