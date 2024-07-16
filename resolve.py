@@ -1,64 +1,41 @@
-from collections import deque
-
-def bfs(x, y):
-  queue = deque()
-  bfs_visited = [[0] * 5 for _ in range(5)]
-  queue.append((x, y))
-  bfs_visited[x][y] = 1
-  cnt = 1
-
-  while queue:
-    x, y = queue.popleft()
-
-    for d in range(4):
-      nx = x + dx[d]
-      ny = y + dy[d]
-
-      if 0 <= nx < 5 and 0 <= ny < 5:
-        if not bfs_visited[nx][ny] and visited[nx][ny] == 1:
-          bfs_visited[nx][ny] = 1
-          cnt += 1
-          queue.append((nx, ny))
-
-  return cnt == 7
-
-
-def check():
-  for i in range(5):
-    for j in range(5):
-      if visited[i][j] == 1:
-        return bfs(i, j)
-
-
-def dfs(n, cnt, scnt):
+def dfs(n, cnt):
   global ans
-
-  if cnt > 7:
+  
+  if n == N:
+    ans = max(ans, cnt)
     return
   
-  if n == 25:
-    if cnt == 7 and scnt >= 4:
-      if check():
-        ans += 1
+  if arr[n][0] <= 0:
+    dfs(n + 1, cnt)
+
+  else:
+    flag = False
+    for i in range(N):
+      if n == i or arr[i][0] <= 0:
+        continue
+
+      flag = True
+      
+      arr[n][0] -= arr[i][1]
+      arr[i][0] -= arr[n][1]
+      dfs(n + 1, cnt + int(arr[n][0] <= 0) + int(arr[i][0] <= 0))
+      arr[n][0] += arr[i][1]
+      arr[i][0] += arr[n][1]
     
-    return
-  
-  visited[n // 5][n % 5] = 1
-  dfs(n + 1, cnt + 1, scnt + int(arr[n // 5][n % 5] == 'S'))
-  visited[n // 5][n % 5] = 0
-
-  dfs(n + 1, cnt, scnt)
+    if flag == False:
+      dfs(n + 1, cnt)
 
 
-
-arr= [list(map(str, input())) for _ in range(5)]
+N = int(input())
+arr = []
 ans = 0
-visited = [[0] * 5 for _ in range(5)]
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+for _ in range(N):
+  # Stability,  Weight
+  S, W = map(int, input().split())
+  arr.append([S, W])
 
 
-dfs(0, 0, 0)
+dfs(0, 0)
 
 print(ans)
