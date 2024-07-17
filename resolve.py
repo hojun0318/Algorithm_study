@@ -1,5 +1,7 @@
 def dfs(n, cnt):
   global ans
+  if ans >= (cnt + (N - n) * 2):
+    return
   
   if n == N:
     ans = max(ans, cnt)
