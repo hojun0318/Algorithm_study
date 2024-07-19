@@ -9,20 +9,21 @@ def bfs(tlst):
     if tlst[i] == 0:
       continue
 
-    x, y = lst[i]
-    queue.append((x, y))
-    visited[x][y] = tlst[i]
+    tx, ty = lst[i]
+    queue.append((tx, ty))
+    visited[tx][ty] = tlst[i]
   
   while queue:
     x, y = queue.popleft()
-    if visited[x][y] == 25000:
+
+    if visited[x][y] == ((N * M) + 1):
       continue
 
     for d in range(4):
       nx = x + dx[d]
       ny = y + dy[d]
 
-      if seeds[nx][ny] == 0 or visited[nx][ny] == 25000:
+      if maps[nx][ny] == 0 or visited[nx][ny] == ((N * M) + 1):
         continue
 
       if visited[nx][ny] == 0:
@@ -37,14 +38,15 @@ def bfs(tlst):
         if visited[x][y] < 0:
           if visited[nx][ny] + visited[x][y] - 1 == 0:
             cnt += 1
-            visited[nx][ny] = 25000
+            visited[nx][ny] = ((N * M) + 1)
 
         else:
           if visited[nx][ny] + visited[x][y] + 1 == 0:
             cnt += 1
-            visited[nx][ny] = 25000
+            visited[nx][ny] = ((N * M) + 1)
 
   return cnt
+
 
 
 def dfs(n, gcnt, rcnt, tlst):
@@ -61,13 +63,13 @@ def dfs(n, gcnt, rcnt, tlst):
 
 
 N, M, G, R = map(int, input().split())
-seeds = [[0] * (M + 2)] + [[0] + list(map(int, input().split())) + [0] for _ in range(N)] + [[0] * (M + 2)]
+maps = [[0] * (M + 2)] + [[0] + list(map(int, input().split())) + [0] for _ in range(N)] + [[0] * (M + 2)]
 ans = 0
 lst = []
 
 for i in range(1, N + 1):
   for j in range(1, M + 1):
-    if seeds[i][j] == 2:
+    if maps[i][j] == 2:
       lst.append((i, j))
 
 TC = len(lst)
