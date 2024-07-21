@@ -1,82 +1,62 @@
 from collections import deque
 
-def bfs(tlst):
+def bfs(x, y):
   queue = deque()
-  visited = [[0] * (M + 2) for _ in range(N + 2)]
-  cnt = 0
+  bfs_visited = [[0] * 5 for _ in range(5)]
+  queue.append((x, y))
+  bfs_visited[x][y] = 1
+  cnt = 1
 
-  for i in range(TC):
-    if tlst[i] == 0:
-      continue
-
-    tx, ty = lst[i]
-    queue.append((tx, ty))
-    visited[tx][ty] = tlst[i]
-  
   while queue:
     x, y = queue.popleft()
-
-    if visited[x][y] == ((N * M) + 1):
-      continue
 
     for d in range(4):
       nx = x + dx[d]
       ny = y + dy[d]
 
-      if maps[nx][ny] == 0 or visited[nx][ny] == ((N * M) + 1):
-        continue
-
-      if visited[nx][ny] == 0:
-        if visited[x][y] < 0:
-          visited[nx][ny] = visited[x][y] - 1
-          queue.append((nx, ny))
-        else:
-          visited[nx][ny] = visited[x][y] + 1
+      if 0 <= nx < 5 and 0 <= ny < 5:
+        if not bfs_visited[nx][ny] and visited[nx][ny] == 1:
+          bfs_visited[nx][ny] = 1
+          cnt += 1
           queue.append((nx, ny))
 
-      else:
-        if visited[x][y] < 0:
-          if visited[nx][ny] + visited[x][y] - 1 == 0:
-            cnt += 1
-            visited[nx][ny] = ((N * M) + 1)
-
-        else:
-          if visited[nx][ny] + visited[x][y] + 1 == 0:
-            cnt += 1
-            visited[nx][ny] = ((N * M) + 1)
-
-  return cnt
+  if cnt == 7:
+    return True
 
 
+def check():
+  for i in range(5):
+    for j in range(5):
+      if visited[i][j] == 1:
+        return bfs(i, j)
 
-def dfs(n, gcnt, rcnt, tlst):
+
+def dfs(n, cnt, scnt):
   global ans
-  if n == TC:
-    if gcnt == G and rcnt == R:
-      ans = max(ans, bfs(tlst))
+  
+  if cnt > 7:
     return
   
-  dfs(n + 1, gcnt + 1, rcnt,     tlst + [1])
-  dfs(n + 1, gcnt,     rcnt + 1, tlst + [-1])
-  dfs(n + 1, gcnt,     rcnt,     tlst + [0])
+  if n == 25:
+    if cnt == 7 and scnt >= 4:
+      if check():
+        ans += 1
+    return
+
+  visited[n // 5][n % 5] = 1
+  dfs(n + 1, cnt + 1, scnt + int(maps[n // 5][n % 5] == 'S'))
+  visited[n // 5][n % 5] = 0
+
+  dfs(n + 1, cnt, scnt)
 
 
-
-N, M, G, R = map(int, input().split())
-maps = [[0] * (M + 2)] + [[0] + list(map(int, input().split())) + [0] for _ in range(N)] + [[0] * (M + 2)]
+maps = [list(map(str, input())) for _ in range(5)]
+visited = [[0] * 5 for _ in range(5)]
 ans = 0
-lst = []
-
-for i in range(1, N + 1):
-  for j in range(1, M + 1):
-    if maps[i][j] == 2:
-      lst.append((i, j))
-
-TC = len(lst)
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
-dfs(0, 0, 0, [])
+dfs(0, 0, 0)
 
 print(ans)
