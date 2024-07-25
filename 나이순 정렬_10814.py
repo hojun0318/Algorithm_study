@@ -4,7 +4,7 @@ lst = []
 for idx in range(N):
     age, name = map(str, input().split())
     lst.append([int(age), idx, name])
-  
+
 
 lst.sort()    
 
