@@ -1,20 +1,25 @@
+N = int(input())
 lst = []
-lst += input().split()
 
-ans = []
-flag = True
+for _ in range(N):
+  tmp = []
+  num = 0
+  word = input()
+  len_word = len(word)
+  tmp.append(word)
+  tmp.append(len_word)
 
-while flag:
-  lst += input().split()
+  for i in range(len_word):
+    if 'a' <= word[i] <= 'z' or 'A' <= word[i] <= 'Z':
+      continue
+    if 0 <= int(word[i]) <= 9:
+      num += int(word[i])
+    
+    
+  tmp.append(num)
+  lst.append(tmp)
 
-  if len(lst) == int(lst[0]) + 1:
-    flag = False
+lst.sort(key = lambda x : (x[1], x[2], x[0]))
 
-for i in range(1, int(lst[0]) + 1):
-  tmp = int(lst[i][::-1])
-  ans.append(tmp)
-
-ans.sort()
-
-for num in ans:
-  print(num)
+for w in lst:
+  print(w[0])
