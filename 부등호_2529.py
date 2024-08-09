@@ -4,13 +4,13 @@ def chk(i, j, s):
       return False
   if s == '>':
     if i < j:
-      return
-    
-  return True 
+      return False
+  
+  return True
 
 
 def dfs(n, num):
-  if n == k + 1:
+  if n == (k + 1):
     ans.append(num)
     return
   
@@ -22,7 +22,6 @@ def dfs(n, num):
       v[i] = 1
       dfs(n + 1, num + str(i))
       v[i] = 0
-
 
 
 k = int(input())
