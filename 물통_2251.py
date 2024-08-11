@@ -1,54 +1,47 @@
 from collections import deque
 
 A, B, C = map(int, input().split())
-
-# 경우의 수를 담을 큐
-queue = deque()
-queue.append((0, 0))
-
-# 방문 여부 저장
 visited = [[0] * (B + 1) for _ in range(A + 1)]
-visited[0][0] = 1
+
+queue = deque()
 
 ans = []
 
-def pour(x, y):
-  if not visited[x][y]:
-    visited[x][y] = True
-    queue.append((x, y))
+def pour(a, b):
+  if not visited[a][b]:
+    visited[a][b] = 1
+    queue.append((a, b))
         
-def bfs():
+def bfs(a, b):
+  queue.append((a, b))
+  visited[0][0] = 1
+
   while queue:
-    # A물통에 있는 물: x, B물통에 있는 물: y, C물통에 있는 물: z
-    x, y = queue.popleft()
-    z = C - x - y
+    a, b = queue.popleft()
+    c = C - a - b
     
-    # A 물통이 비어있는 경우에 C 물통에 남아있는 양 저장
-    if x == 0:
-        ans.append(z)
+    # A물통에 물이 없을때 C물통의 물의 양
+    if a == 0:
+        ans.append(c)
         
-    # A에서 B로 물 이동
-    water = min(x, B - y)
-    pour(x - water, y + water)
-    # A에서 C로 물 이동
-    water = min(x, C - z)
-    pour(x - water, y)
+    w = min(a, B - b)         # A -> B 옮길 물의 양
+    pour(a - w, b + w)        # 옮긴 후의 a와 b의 물의 양
+
+    w = min(a, C - c)         # A -> C
+    pour(a - w, b)
     
-    # B에서 C로 물 이동
-    water = min(y, C - z)
-    pour(x, y - water)
-    # B에서 A로 물 이동
-    water = min(y, A - x)
-    pour(x + water, y - water)
+    w = min(b, C - c)         # B -> C
+    pour(a, b - w)
+    w = min(b, A - a)         # B -> A
+    pour(a + w, b - w)
     
-    # C에서 A로 물 이동
-    water = min(z, A - x)
-    pour(x + water, y)
-    # C에서 B로 물 이동
-    water = min(z, B - y)
-    pour(x, y + water)
+    w = min(c, A - a)         # C -> A
+    pour(a + w, b)
+    w = min(c, B - b)         # C -> B
+    pour(a, b + w)
         
-bfs()
+
+bfs(0, 0)
 
 ans.sort()
 
