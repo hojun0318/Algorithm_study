@@ -7,12 +7,12 @@ queue = deque()
 
 ans = []
 
-def pour(a, b):
-  if not visited[a][b]:
-    visited[a][b] = 1
-    queue.append((a, b))
+def remain(na, nb):
+  if not visited[na][nb]:
+    visited[na][nb] = 1
+    queue.append((na, nb))
         
-def bfs(a, b):
+def pour(a, b):
   queue.append((a, b))
   visited[0][0] = 1
 
@@ -25,23 +25,23 @@ def bfs(a, b):
         ans.append(c)
         
     w = min(a, B - b)         # A -> B 옮길 물의 양
-    pour(a - w, b + w)        # 옮긴 후의 a와 b의 물의 양
+    remain(a - w, b + w)        # 옮긴 후의 a와 b의 물의 양
 
     w = min(a, C - c)         # A -> C
-    pour(a - w, b)
+    remain(a - w, b)
     
     w = min(b, C - c)         # B -> C
-    pour(a, b - w)
+    remain(a, b - w)
     w = min(b, A - a)         # B -> A
-    pour(a + w, b - w)
+    remain(a + w, b - w)
     
     w = min(c, A - a)         # C -> A
-    pour(a + w, b)
+    remain(a + w, b)
     w = min(c, B - b)         # C -> B
-    pour(a, b + w)
+    remain(a, b + w)
         
 
-bfs(0, 0)
+pour(0, 0)
 
 ans.sort()
 
