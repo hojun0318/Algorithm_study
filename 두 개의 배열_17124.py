@@ -1,11 +1,10 @@
 def search_min(lst):
   mn = lst[2]
   cursor = 2
-  if lst[1] <= mn:
-      mn = lst[1]
-      cursor = 1
-  if lst[0] <= mn:
-      cursor = 0
+  for i in range(2):
+    if mn >= lst[i]:
+      mn = lst[i]
+      cursor = i
       
   return cursor
 
@@ -15,12 +14,12 @@ def binary_search(a, B, s, e):
   if diff <= 1:
       return s
   
-  m = (e + s) // 2
+  mid = (e + s) // 2
   
-  if a < B[m]:
-      return binary_search(a, B, s, m)
+  if a < B[mid]:
+      return binary_search(a, B, s, mid)
   else:
-      return binary_search(a, B, m, e)
+      return binary_search(a, B, mid, e)
 
 
 
@@ -29,18 +28,13 @@ T = int(input())
 for _ in range(T):
   n, m = map(int, input().split())
   A = list(map(int, input().split()))
-  B = list(map(int, input().split()))
-  B.sort()
+  B = sorted(list(map(int, input().split())))
   C = 0
   
   for a in A:
     idx = binary_search(a, B, 0, m)
-    lst = []
-    lst.append(abs(a - B[idx - 1]))
-    lst.append(abs(a - B[idx]))
-    lst.append(abs(a - B[(idx + 1) % m]))
-    chk = search_min(lst)
-    C += B[idx + chk - 1]
+    lst = [abs(a - B[idx - 1]), abs(a - B[idx]), abs(a - B[(idx + 1) % m])]
+    C += B[idx + search_min(lst) - 1]
                 
 
   print(C)
