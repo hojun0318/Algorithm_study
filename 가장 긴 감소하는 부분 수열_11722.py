@@ -1,14 +1,15 @@
 N = int(input())
-lst = [1000] + sorted(list(map(int, input().split())), reverse = True)
+lst = [1000] + list(map(int, input().split()))
 
 dp = [0] * (N + 1)
 
-for i in range(1, N):
-  mn = 1000
+for i in range(1, N + 1):
+  mx = 0
   for j in range(0, i):
     if lst[i] < lst[j]:
-      mn = min(mn, lst[j])
+      mx = max(mx, dp[j])
+  dp[i] = mx + 1
 
-  dp[i] = mn + 1
 
+print(dp)
 print(max(dp))
