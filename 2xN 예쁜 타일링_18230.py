@@ -17,7 +17,8 @@ for _ in range(0, N, 2):
         
   if t1 > t2: 
     ans += t1 
-    lst2_1.pop(); lst2_1.pop() 
+    lst2_1.pop()
+    lst2_1.pop() 
   else: 
     ans += t2 
     lst2_2.pop() 
