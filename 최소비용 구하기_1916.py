@@ -4,7 +4,6 @@ N = int(input())
 M = int(input())
 load = [[] for _ in range(N + 1)]
 
-
 for _ in range(M):
   n1, n2, dis = map(int, input().split())
   load[n1].append([n2, dis])
@@ -22,7 +21,7 @@ while heap:
 
   if costs[node] < tot:
     continue
-  
+
   for nxt_node, nxt_cost in load[node]:
     sum_cost = tot + nxt_cost
     if sum_cost >= costs[nxt_node]:
