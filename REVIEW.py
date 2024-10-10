@@ -1,33 +1,47 @@
 from collections import deque
 
-def bfs():
+def bfs(x, y, c):
   queue = deque()
-  queue.append(a - 1)
-  visited[a - 1] = 0
+  queue.append((x, y, c))
+  visited[x][y] = 1
 
   while queue:
-    now = queue.popleft()
-    
-    for i in range(now, N, lst[now]):
-      if visited[i] == -1:
-        visited[i] = visited[now] + 1
-        queue.append(i)
-        if i == (b - 1):
-          return visited[i]
-    
-    for j in range(now, -1, -lst[now]):
-      if visited[j] == -1:
-        visited[j] = visited[now] + 1
-        queue.append(j)
-        if j == (b - 1):
-          return visited[j]
-        
-  return -1
+    x, y, c = queue.popleft()
+
+    for i in range(4):
+      nx = x + dx[i]
+      ny = y + dy[i]
+
+      if 0 <= nx < N and 0 <= ny < N:
+        if not visited[nx][ny] and maps[nx][ny] == c:
+          if c == 'G':
+            maps[nx][ny] = 'R'
+          visited[nx][ny] = 1
+          queue.append((nx, ny, c))
 
 
 N = int(input())
-lst = list(map(int, input().split()))
-a, b = map(int, input().split())
-visited = [-1] * 10000
+maps = [list(map(str, input())) for _ in range(N)]
+ans = []
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
-print(bfs())
+for _ in range(2):
+  cnt = 0
+  visited = [[0] * N for _ in range(N)]
+  for i in range(N):
+    for j in range(N):
+      if maps[i][j] == 'R' and not visited[i][j]:
+        cnt += 1
+        bfs(i, j, 'R')
+      if maps[i][j] == 'B' and not visited[i][j]:
+        cnt += 1
+        bfs(i, j, 'B')
+      if maps[i][j] == 'G' and not visited[i][j]:
+        cnt += 1
+        maps[i][j] = 'R'
+        bfs(i, j, 'G')
+
+  ans.append(cnt)
+
+print(*ans)
