@@ -1,5 +1,3 @@
-from collections import deque
-
 def check(si, sj, di, dj, c):
   if maps[si - di][sj - dj] == c:
     return False
