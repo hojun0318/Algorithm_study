@@ -1,1 +1,2 @@
-1
+[a] b bcd
+a a a[c]d
